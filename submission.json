@@ -1,0 +1,101 @@
+{
+  "challenge_id": "C2G",
+  "track": "local_analysis_only",
+  "submission_type": "documentation_only",
+
+  "model": {
+    "architecture": "GPT (9-layer, 512-dim, 4-KV-head GQA, tied embeddings)",
+    "vocab_size": 8192,
+    "tokenizer": "SentencePiece SP-8192",
+    "num_layers": 9,
+    "hidden_dim": 512,
+    "num_heads": 8,
+    "num_kv_heads": 4,
+    "block_size": 1024,
+    "qk_gain_init": 5.0,
+    "eval_stride": 64
+  },
+
+  "training": {
+    "optimizer": "AdamW + Muon hybrid (from baseline)",
+    "learning_rate": 0.003,
+    "min_lr": 0.0,
+    "warmup_steps": 20,
+    "weight_decay": 0.01,
+    "batch_size_tokens": 524288,
+    "max_steps": 100,
+    "mixed_precision": "bf16",
+    "gradient_clip": 1.0,
+    "seeds_run": 0,
+    "seed_values": []
+  },
+
+  "results": {
+    "local_bpb_measured": "not_measured",
+    "local_bpb_expected_range": "1.16-1.18",
+    "local_hardware": "CPU only (no GPU)",
+    "official_leaderboard": false,
+    "official_bpb": "not_measured",
+    "artifact_built": "not_measured",
+    "artifact_size_bytes": "not_measured",
+    "training_time_seconds": "not_measured",
+    "notes": "All BPB estimates derived from analysis of 33 official leaderboard submissions. No GPU resources available for actual training."
+  },
+
+  "improvements": [
+    {
+      "component": "Tokenizer upgrade",
+      "baseline": "SP-1024",
+      "improved": "SP-8192",
+      "expected_delta_bpb": -0.04,
+      "evidence": "Leaderboard entries #2-#33 consistently show SP8192 outperforms SP1024 by 0.03-0.05 BPB"
+    },
+    {
+      "component": "QK-Gain initialization",
+      "baseline": 1.5,
+      "improved": 5.0,
+      "expected_delta_bpb": -0.0065,
+      "evidence": "Leaderboard entry #14 (QK-Gain 5.25) shows -0.005 vs baseline"
+    },
+    {
+      "component": "Sliding window evaluation",
+      "baseline": "standard (stride=seq_len)",
+      "improved": "sliding window (stride=64)",
+      "expected_delta_bpb": -0.0075,
+      "evidence": "Leaderboard entries #28-#33 show consistent -0.005 to -0.01 improvement with sliding window eval"
+    }
+  ],
+
+  "deliverables": {
+    "proposal": true,
+    "design_doc": true,
+    "training_code": true,
+    "ablation_report": true,
+    "leaderboard_comparison": true,
+    "ai_log": true,
+    "attribution_doc": true,
+    "aar_review": true,
+    "readme": true,
+    "submission_json": true,
+    "training_logs": false,
+    "artifact_16mb": false
+  },
+
+  "honesty_disclosure": {
+    "gpu_access": false,
+    "experiments_run": 0,
+    "seeds_completed": 0,
+    "all_unmeasured_fields_marked": true,
+    "does_not_claim_official_leaderboard": true,
+    "methodology": "Pure documentation route: systematic analysis of 33 official leaderboard submissions to derive evidence-based improvement strategy. All BPB values are estimates, not measurements."
+  },
+
+  "metadata": {
+    "submission_date": "2026-10-05",
+    "student_name_pinyin": "sanqiuxi",
+    "student_name_chinese": "三秋羲",
+    "contact_email": "",
+    "github_repo": "https://github.com/9SanQiuXi9/C2G-Parameter-Golf-Training-Language-Models-Under-Extreme-Budget",
+    "notes": "Documentation-only submission. No GPU resources available. Ready to execute upon access to 8×H100 or equivalent."
+  }
+}
